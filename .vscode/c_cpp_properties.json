@@ -10,6 +10,7 @@
             "includePath": [
                 "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/include",
                 "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/src",
+                "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/.pio/libdeps/nodemcu-32s/Keypad/src",
                 "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/.pio/libdeps/nodemcu-32s/FastLED/src",
                 "C:/Users/WeiChun/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                 "C:/Users/WeiChun/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/config",
@@ -109,6 +110,7 @@
                 "path": [
                     "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/include",
                     "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/src",
+                    "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/.pio/libdeps/nodemcu-32s/Keypad/src",
                     "c:/Users/WeiChun/Desktop/Projects/FollowMeLights/Code/InteractiveLight/.pio/libdeps/nodemcu-32s/FastLED/src",
                     "C:/Users/WeiChun/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                     "C:/Users/WeiChun/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/config",

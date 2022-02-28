@@ -1,129 +1,112 @@
 #include <Arduino.h>
+#include <Keypad.h>
 #include <FastLED.h>
 
-#define DATA_PIN 15
+#define LED_PIN     15
 #define NUM_LEDS    54
 #define BRIGHTNESS  32
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
+#define UPDATES_PER_SECOND 100
+
 CRGB leds[NUM_LEDS];
+CRGBPalette16 currentPalette;
+TBlendType    currentBlending;
 
-void topLeft(int color){
-    leds[6] = color;
-    leds[7] = color;
-    leds[8] = color;
-    leds[9] = color;
-    leds[10] = color;
-    leds[11] = color;
-    FastLED.show();
-}
-void topCenter(int color){
-    leds[3] = color;
-    leds[4] = color;
-    leds[5] = color;
-    leds[12] = color;
-    leds[13] = color;
-    leds[14] = color;
-    FastLED.show();
-}
-void topRight(int color){
-    leds[0] = color;
-    leds[1] = color;
-    leds[2] = color;
-    leds[15] = color;
-    leds[16] = color;
-    leds[17] = color;
-    FastLED.show();
-}
-void centerRight(int color){
-    leds[18] = color;
-    leds[19] = color;
-    leds[20] = color;
-    leds[30] = color;
-    leds[31] = color;
-    leds[32] = color;
-    FastLED.show();
-}
-void center(int color){
-    leds[21] = color;
-    leds[22] = color;
-    leds[23] = color;
-    leds[33] = color;
-    leds[34] = color;
-    leds[35] = color;
-    FastLED.show();
-}
-void centerLeft(int color){
-    leds[24] = color;
-    leds[25] = color;
-    leds[26] = color;
-    leds[27] = color;
-    leds[28] = color;
-    leds[29] = color;
-    FastLED.show();
-}
-void bottomRight(int color){
-    leds[36] = color;
-    leds[37] = color;
-    leds[38] = color;
-    leds[51] = color;
-    leds[52] = color;
-    leds[53] = color;
-    FastLED.show();
-}
-void bottomCenter(int color){
-    leds[39] = color;
-    leds[40] = color;
-    leds[41] = color;
-    leds[48] = color;
-    leds[49] = color;
-    leds[50] = color;
-    FastLED.show();
-}
-void bottomLeft(int color){
-    leds[42] = color;
-    leds[43] = color;
-    leds[44] = color;
-    leds[45] = color;
-    leds[46] = color;
-    leds[47] = color;
-    FastLED.show();
-}
+// //Led light locations
+// // topLeft      topCenter       topRight
+// // 8 7 6        5 4 3           2 1 0
+// // 9 10 11      12 13 14        15 16 17
+// // centerLeft   center          centerRight
+// // 26 25 24     23 22 21        20 19 18
+// // 27 28 29     30 31 32        33 34 35
+// // bottomLeft   bottomCenter    bottomRight
+// // 44 43 42     41 40 39        38 37 36
+// // 45 46 47     48 49 50        51 52 53
+int TopLeft[] = {6, 7, 8, 9, 10, 11};
+int TopCenter[] = {3, 4, 5, 12, 13, 14};
+int TopRight[] = {0, 1, 2, 15, 16, 17};
+int CenterLeft[] = {24, 25, 26, 27, 28, 29};
+int Center[] = {21, 22, 23, 30, 31, 32};
+int CenterRight[] = {18, 19, 20, 33, 34, 35};
+int BottomLeft[] = {42, 43, 44, 45, 46, 47};
+int BottomCenter[] = {39, 40, 41, 48, 49, 50};
+int BottomRight[] = {36, 37, 38, 51, 52, 53};
 
-enum LightState{
-    On = 0x4682B4,
-    Off = 0x000000
+
+int LightColors[] = {
+    CRGB::Crimson,
+    CRGB::Coral,
+    CRGB::Yellow,
+    CRGB::ForestGreen,
+    CRGB::Blue,
+    CRGB::Indigo,
+    CRGB::BlueViolet,
+    CRGB::Black
 };
 
+void ledToLightUp(int arr[6], int color){
+    for (int i = 0; i < 6; i++)
+    {
+        leds[arr[i]] = color;
+        
+    }
+    FastLED.show();
+}
+
+void FillLEDsFromPaletteColors( uint8_t colorIndex)
+{
+    uint8_t brightness = 255;
+    
+    for( int i = 0; i < NUM_LEDS; ++i) {
+        leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+        colorIndex += 3;
+    }
+}
+// //Button locations
+// //  topLeft     topCenter       topRight        ButtonState
+// //  C1R1        C2R1            C3R1            C4R1
+// //  centerLeft  center          CenterRight     ButtonReset
+// //  C1R2        C2R2            C3R2            C4R2
+// //  bottomLeft  bottomCenter    bottomRight     ButtonPlay
+// //  C1R3        C2R3            C3R3            C4R3
+
+
+// There are several different palettes of colors demonstrated here.
+//
+// FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
+// OceanColors_p, CloudColors_p, LavaColors_p, ForestColors_p, and PartyColors_p.
+//
+// Additionally, you can manually define your own color palettes, or you can write
+// code that creates color palettes on the fly.  All are shown here.
+
 void setup() {
-    FastLED.addLeds<LED_TYPE, DATA_PIN, RGB>(leds, NUM_LEDS);
+    delay( 3000 ); // power-up safety delay
+    
+    // currentPalette = RainbowColors_p;
+    FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness( BRIGHTNESS );
-}
 
-void loop() {
-//    for( int whiteLed = 0; whiteLed < NUM_LEDS; whiteLed += 1 ) {
-//       // Turn our current led on to white, then show the leds
-//       leds[whiteLed] = CRGB::Black;
-      
-//       // Show the leds (only one of which is set to white, from above)
-//       FastLED.show();
-
-//       // Wait a little bit
-//       delay(100);
-//       // Turn our current led back to black for the next loop around
-//       leds[whiteLed] = CRGB::WhiteSmoke;
-//       }
-    topLeft(0x4682B4);
-    topCenter(0xD2B48C);
-    topRight(0x008080);
-    centerRight(0xD8BFD8);
-    center(0xFF6347);
-    centerLeft(0x40E0D0);
-    bottomRight(0xEE82EE);
-    bottomLeft(0xF5DEB3);
-    bottomCenter(0xFFFF00);
-    delay(100);
 }
 
 
+void loop()
+{
+    ledToLightUp(TopRight, LightColors[0]);
+    ledToLightUp(TopCenter, LightColors[1]);
+    ledToLightUp(TopLeft, LightColors[2]);
+    ledToLightUp(CenterRight, LightColors[3]);
+    ledToLightUp(Center, LightColors[4]);
+    ledToLightUp(CenterLeft, LightColors[5]);
+    ledToLightUp(BottomRight, LightColors[6]);
+    ledToLightUp(BottomCenter, LightColors[7]);
+    ledToLightUp(BottomLeft, LightColors[0]);
+    // currentPalette = RainbowColors_p;
+    // static uint8_t startIndex = 0;
+    // startIndex = startIndex + 1; /* motion speed */
+    // FillLEDsFromPaletteColors( startIndex);
+    
+    
 
+    FastLED.delay(1000);
+}
