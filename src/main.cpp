@@ -12,6 +12,19 @@
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
+const byte ROWS = 3; 
+const byte COLS = 4;
+String msg;
+char key;
+int currentLightColorTopLeft = 0;
+int currentLightColorTopCenter = 0;
+int currentLightColorTopRight = 0;
+int currentLightColorCenterLeft = 0;
+int currentLightColorCenter = 0;
+int currentLightColorCenterRight = 0;
+int currentLightColorBottomLeft = 0;
+int currentLightColorBottomCenter = 0;
+int currentLightColorBottomRight = 0;
 
 // //Led light locations
 // // topLeft      topCenter       topRight
@@ -23,6 +36,7 @@ TBlendType    currentBlending;
 // // bottomLeft   bottomCenter    bottomRight
 // // 44 43 42     41 40 39        38 37 36
 // // 45 46 47     48 49 50        51 52 53
+
 int TopLeft[] = {6, 7, 8, 9, 10, 11};
 int TopCenter[] = {3, 4, 5, 12, 13, 14};
 int TopRight[] = {0, 1, 2, 15, 16, 17};
@@ -32,6 +46,24 @@ int CenterRight[] = {18, 19, 20, 33, 34, 35};
 int BottomLeft[] = {42, 43, 44, 45, 46, 47};
 int BottomCenter[] = {39, 40, 41, 48, 49, 50};
 int BottomRight[] = {36, 37, 38, 51, 52, 53};
+
+// //Button locations
+// //  topLeft     topCenter       topRight        ButtonState
+// //  C1R1{1}      C2R1{2}         C3R1{3}          C4R1{A}
+// //  centerLeft  center          CenterRight     ButtonReset
+// //  C1R2{4}      C2R2{5}         C3R2{6}          C4R2{B}
+// //  bottomLeft  bottomCenter    bottomRight     ButtonPlay
+// //  C1R3{7}      C2R3{8}         C3R3{9}          C4R3{C}
+
+char Keys[ROWS][COLS] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'}
+};
+
+byte rowPins[ROWS] = {4, 16, 17}; 
+byte colPins[COLS] = {5, 18, 19, 21}; 
+Keypad keypad = Keypad( makeKeymap(Keys), rowPins, colPins, ROWS, COLS ); 
 
 
 int LightColors[] = {
@@ -45,7 +77,8 @@ int LightColors[] = {
     CRGB::Black
 };
 
-void ledToLightUp(int arr[6], int color){
+void ledToLightUp(int arr[], int color)
+{
     for (int i = 0; i < 6; i++)
     {
         leds[arr[i]] = color;
@@ -63,13 +96,120 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
         colorIndex += 3;
     }
 }
-// //Button locations
-// //  topLeft     topCenter       topRight        ButtonState
-// //  C1R1        C2R1            C3R1            C4R1
-// //  centerLeft  center          CenterRight     ButtonReset
-// //  C1R2        C2R2            C3R2            C4R2
-// //  bottomLeft  bottomCenter    bottomRight     ButtonPlay
-// //  C1R3        C2R3            C3R3            C4R3
+
+// void keypadEvent(KeypadEvent key){
+//     switch (keypad.getState()){
+//     case PRESSED:
+//         if (key == '9') {
+//             ledToLightUp(BottomRight, LightColors[currentLightColor]);
+//             currentLightColor++;
+//             currentLightColor = currentLightColor % 8;
+//             Serial.println("Button 9");
+//         }
+//         break;
+
+//     case RELEASED:
+//         if (key == '8') {
+//             // digitalWrite(ledPin,ledPin_state);    // Restore LED state from before it started blinking.
+//             // blink = false;
+//             Serial.println("Button 8");
+//         }
+//         break;
+
+//     case HOLD:
+//         if (key == '9') {
+//             // blink = true;    // Blink the LED when holding the * key.
+//             Serial.println("Button 9 hold");
+//         }
+//         break;
+//     }
+// }
+
+void freePlayMode()
+{
+    switch (key)
+    {
+    case '1':
+        /* code */
+        ledToLightUp(TopLeft, LightColors[currentLightColorTopLeft]);
+        currentLightColorTopLeft++;
+        currentLightColorTopLeft = currentLightColorTopLeft % 8;
+        Serial.println(key);
+        break;
+    case '2':
+        /* code */
+        ledToLightUp(TopCenter, LightColors[currentLightColorTopCenter]);
+        currentLightColorTopCenter++;
+        currentLightColorTopCenter = currentLightColorTopCenter % 8;
+        Serial.println(key);
+        break;
+    case '3':
+        /* code */
+        ledToLightUp(TopRight, LightColors[currentLightColorTopRight]);
+        currentLightColorTopRight++;
+        currentLightColorTopRight = currentLightColorTopRight % 8;
+        Serial.println(key);
+        break;
+    case '4':
+        /* code */
+        ledToLightUp(CenterLeft, LightColors[currentLightColorCenterLeft]);
+        currentLightColorCenterLeft++;
+        currentLightColorCenterLeft = currentLightColorCenterLeft % 8;
+        Serial.println(key);
+        break;
+    case '5':
+        /* code */
+        ledToLightUp(Center, LightColors[currentLightColorCenter]);
+        currentLightColorCenter++;
+        currentLightColorCenter = currentLightColorCenter % 8;
+        Serial.println(key);
+        break;
+    case '6':
+        /* code */
+        ledToLightUp(CenterRight, LightColors[currentLightColorCenterRight]);
+        currentLightColorCenterRight++;
+        currentLightColorCenterRight = currentLightColorCenterRight % 8;
+        Serial.println(key);
+        break;
+    case '7':
+        /* code */
+        ledToLightUp(BottomLeft, LightColors[currentLightColorBottomLeft]);
+        currentLightColorBottomLeft++;
+        currentLightColorBottomLeft = currentLightColorBottomLeft % 8;
+        Serial.println(key);
+        break;
+    case '8':
+        /* code */
+        ledToLightUp(BottomCenter, LightColors[currentLightColorBottomCenter]);
+        currentLightColorBottomCenter++;
+        currentLightColorBottomCenter = currentLightColorBottomCenter % 8;
+        Serial.println(key);
+        break;
+    case '9':
+        /* code */
+        ledToLightUp(BottomRight, LightColors[currentLightColorBottomRight]);
+        currentLightColorBottomRight++;
+        currentLightColorBottomRight = currentLightColorBottomRight % 8;
+        Serial.println(key);
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void chooseGameMode()
+{
+    switch (key)
+    {
+    case 'A':
+        /* code */
+        break;
+    
+    default:
+        break;
+    }
+}
 
 
 // There are several different palettes of colors demonstrated here.
@@ -81,32 +221,27 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
 // code that creates color palettes on the fly.  All are shown here.
 
 void setup() {
+
+    Serial.begin(9600);
+    Serial.println("Starting");
+
     delay( 3000 ); // power-up safety delay
     
     // currentPalette = RainbowColors_p;
     FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness( BRIGHTNESS );
-
+    // keypad.addEventListener(keypadEvent);
 }
 
 
 void loop()
 {
-    ledToLightUp(TopRight, LightColors[0]);
-    ledToLightUp(TopCenter, LightColors[1]);
-    ledToLightUp(TopLeft, LightColors[2]);
-    ledToLightUp(CenterRight, LightColors[3]);
-    ledToLightUp(Center, LightColors[4]);
-    ledToLightUp(CenterLeft, LightColors[5]);
-    ledToLightUp(BottomRight, LightColors[6]);
-    ledToLightUp(BottomCenter, LightColors[7]);
-    ledToLightUp(BottomLeft, LightColors[0]);
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
     // FillLEDsFromPaletteColors( startIndex);
+    key = keypad.getKey();
     
-    
+    freePlayMode();
 
-    FastLED.delay(1000);
 }

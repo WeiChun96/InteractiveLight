@@ -244,6 +244,7 @@ void Keypad::addEventListener(void (*listener)(char)){
 	keypadEventListener = listener;
 }
 
+
 void Keypad::transitionTo(byte idx, KeyState nextState) {
 	key[idx].kstate = nextState;
 	key[idx].stateChanged = true;
