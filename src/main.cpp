@@ -198,14 +198,19 @@ void freePlayMode()
     }
 }
 
-void chooseGameMode()
+void GameSettings()
 {
     switch (key)
     {
     case 'A':
         /* code */
         break;
+    case 'B':
+
+        break;
+    case 'C':
     
+        break;
     default:
         break;
     }
@@ -222,7 +227,7 @@ void chooseGameMode()
 
 void setup() {
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     Serial.println("Starting");
 
     delay( 3000 ); // power-up safety delay
