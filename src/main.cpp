@@ -3,6 +3,7 @@
 #include <FastLED.h>
 #include <Wire.h>
 #include <LiquidCrystal.h>
+#include <analogWrite.h>
 
 #define LED_PIN     15
 #define NUM_LEDS    54
@@ -12,10 +13,14 @@
 #define UPDATES_PER_SECOND 100
 
 CRGB leds[NUM_LEDS];
+// Create An LCD Object. Signals: [ RS, EN, D4, D5, D6, D7 ]
+LiquidCrystal My_LCD(13, 12, 14, 27, 26, 25);
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
 const byte COLS = 4;
 const byte ROWS = 3; 
+const byte backLightpin = 33; 
+const byte contrast_pin = 32;
 char key;
 int currentLightColorTopLeft = 0;
 int currentLightColorTopCenter = 0;
@@ -230,12 +235,22 @@ void setup() {
 
     Serial.begin(115200);
     Serial.println("Starting");
+        // Initialize The LCD. Parameters: [ Columns, Rows ]
+    My_LCD.begin(16, 2);
+    // Clears The LCD Display
+    My_LCD.clear();
+    pinMode(backLightpin, OUTPUT);
+    analogWrite(backLightpin, 210);
+    pinMode(contrast_pin, OUTPUT);
+    analogWrite(contrast_pin, 40);
+    My_LCD.print("Powering UP");
 
     delay( 3000 ); // power-up safety delay
     
     // currentPalette = RainbowColors_p;
     FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness( BRIGHTNESS );
+    My_LCD.clear();
     // keypad.addEventListener(keypadEvent);
 }
 
@@ -247,7 +262,7 @@ void loop()
     // startIndex = startIndex + 1; /* motion speed */
     // FillLEDsFromPaletteColors( startIndex);
     key = keypad.getKey();
-    
-    freePlayMode();
+    //freePlayMode();
+
 
 }
