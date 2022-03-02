@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include <FastLED.h>
+#include <Wire.h>
+#include <LiquidCrystal.h>
 
 #define LED_PIN     15
 #define NUM_LEDS    54
@@ -12,9 +14,8 @@
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
-const byte ROWS = 3; 
 const byte COLS = 4;
-String msg;
+const byte ROWS = 3; 
 char key;
 int currentLightColorTopLeft = 0;
 int currentLightColorTopCenter = 0;
@@ -203,13 +204,13 @@ void GameSettings()
     switch (key)
     {
     case 'A':
-        /* code */
+        
         break;
     case 'B':
 
         break;
     case 'C':
-    
+
         break;
     default:
         break;
