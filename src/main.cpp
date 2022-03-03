@@ -140,63 +140,58 @@ void freePlayMode()
         ledToLightUp(TopLeft, LightColors[currentLightColorTopLeft]);
         currentLightColorTopLeft++;
         currentLightColorTopLeft = currentLightColorTopLeft % 8;
-        Serial.println(key);
         break;
     case '2':
         /* code */
         ledToLightUp(TopCenter, LightColors[currentLightColorTopCenter]);
         currentLightColorTopCenter++;
         currentLightColorTopCenter = currentLightColorTopCenter % 8;
-        Serial.println(key);
         break;
     case '3':
         /* code */
         ledToLightUp(TopRight, LightColors[currentLightColorTopRight]);
         currentLightColorTopRight++;
         currentLightColorTopRight = currentLightColorTopRight % 8;
-        Serial.println(key);
         break;
     case '4':
         /* code */
         ledToLightUp(CenterLeft, LightColors[currentLightColorCenterLeft]);
         currentLightColorCenterLeft++;
         currentLightColorCenterLeft = currentLightColorCenterLeft % 8;
-        Serial.println(key);
         break;
     case '5':
         /* code */
         ledToLightUp(Center, LightColors[currentLightColorCenter]);
         currentLightColorCenter++;
         currentLightColorCenter = currentLightColorCenter % 8;
-        Serial.println(key);
         break;
     case '6':
         /* code */
         ledToLightUp(CenterRight, LightColors[currentLightColorCenterRight]);
         currentLightColorCenterRight++;
         currentLightColorCenterRight = currentLightColorCenterRight % 8;
-        Serial.println(key);
+      
         break;
     case '7':
         /* code */
         ledToLightUp(BottomLeft, LightColors[currentLightColorBottomLeft]);
         currentLightColorBottomLeft++;
         currentLightColorBottomLeft = currentLightColorBottomLeft % 8;
-        Serial.println(key);
+        
         break;
     case '8':
         /* code */
         ledToLightUp(BottomCenter, LightColors[currentLightColorBottomCenter]);
         currentLightColorBottomCenter++;
         currentLightColorBottomCenter = currentLightColorBottomCenter % 8;
-        Serial.println(key);
+
         break;
     case '9':
         /* code */
         ledToLightUp(BottomRight, LightColors[currentLightColorBottomRight]);
         currentLightColorBottomRight++;
         currentLightColorBottomRight = currentLightColorBottomRight % 8;
-        Serial.println(key);
+
         break;
     
     default:
