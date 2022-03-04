@@ -2,8 +2,9 @@
 #include <Keypad.h>
 #include <FastLED.h>
 #include <Wire.h>
-#include <LiquidCrystal.h>
 #include <analogWrite.h>
+#include <LiquidCrystal.h>
+
 
 #define LED_PIN     15
 #define NUM_LEDS    54
@@ -11,6 +12,7 @@
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 #define UPDATES_PER_SECOND 100
+#define MAX_DIGITS 9
 
 CRGB leds[NUM_LEDS];
 // Create An LCD Object. Signals: [ RS, EN, D4, D5, D6, D7 ]
@@ -31,6 +33,11 @@ int currentLightColorCenterRight = 0;
 int currentLightColorBottomLeft = 0;
 int currentLightColorBottomCenter = 0;
 int currentLightColorBottomRight = 0;
+int randNumber;
+int response;
+int score = 0;
+int level = 1;
+int difficulty;
 
 // //Led light locations
 // // topLeft      topCenter       topRight
@@ -193,13 +200,80 @@ void freePlayMode()
         currentLightColorBottomRight = currentLightColorBottomRight % 8;
 
         break;
-    
-    default:
+    }
+}
+
+void getGuessLight()
+{
+    switch (randNumber)
+    {
+        case 1:      
+            ledToLightUp(TopLeft, LightColors[6]);
+        break;
+
+        case 2:      
+            ledToLightUp(TopCenter, LightColors[6]);
+        break;
+
+        case 3:      
+            ledToLightUp(TopRight, LightColors[6]);
+        break;
+
+        case 4:      
+            ledToLightUp(CenterLeft, LightColors[6]);
+        break;
+
+        case 5:      
+            ledToLightUp(Center, LightColors[6]);
+        break;
+
+        case 6:      
+            ledToLightUp(CenterRight, LightColors[6]);
+        break;
+
+        case 7:      
+            ledToLightUp(BottomLeft, LightColors[6]);
+        break;
+
+        case 8:      
+            ledToLightUp(BottomCenter, LightColors[6]);
+        break;
+
+        case 9:      
+            ledToLightUp(BottomRight, LightColors[6]);
         break;
     }
 }
 
-void GameSettings()
+void wrongAnswer()
+{
+    ledToLightUp(TopLeft, LightColors[3]);
+    ledToLightUp(TopCenter, LightColors[3]);
+    ledToLightUp(TopRight, LightColors[3]);
+    ledToLightUp(CenterLeft, LightColors[3]);
+    ledToLightUp(Center, LightColors[3]);
+    ledToLightUp(CenterRight, LightColors[3]);
+    ledToLightUp(BottomLeft, LightColors[3]);
+    ledToLightUp(BottomCenter, LightColors[3]);
+    ledToLightUp(BottomRight, LightColors[3]);
+}
+
+void turnOffAll()
+{
+    ledToLightUp(TopLeft, LightColors[7]);
+    ledToLightUp(TopCenter, LightColors[7]);
+    ledToLightUp(TopRight, LightColors[7]);
+    ledToLightUp(CenterLeft, LightColors[7]);
+    ledToLightUp(Center, LightColors[7]);
+    ledToLightUp(CenterRight, LightColors[7]);
+    ledToLightUp(BottomLeft, LightColors[7]);
+    ledToLightUp(BottomCenter, LightColors[7]);
+    ledToLightUp(BottomRight, LightColors[7]);
+}
+
+
+
+void gameSettings()
 {
     switch (key)
     {
@@ -212,10 +286,9 @@ void GameSettings()
     case 'C':
 
         break;
-    default:
-        break;
     }
 }
+
 
 
 // There are several different palettes of colors demonstrated here.
@@ -240,6 +313,7 @@ void setup() {
     analogWrite(contrast_pin, 40);
     My_LCD.print("Powering UP");
 
+
     delay( 3000 ); // power-up safety delay
     
     // currentPalette = RainbowColors_p;
@@ -252,12 +326,70 @@ void setup() {
 
 void loop()
 {
+    turnOffAll();
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
     // FillLEDsFromPaletteColors( startIndex);
-    key = keypad.getKey();
-    //freePlayMode();
+    // freePlayMode();
+    // srand(time(NULL));
+    // randNumber = rand() % 9 + 1;
 
+
+
+
+    // if (level == 1)
+    // {
+    //     randNumber = random(1, 9);
+    //     response = key - '0';
+    //     Serial.print("The Random Number is: ");
+    //     Serial.println(randNumber);
+    //     getGuessLight();
+    //     delay(2000);
+    //     Serial.println("Starting Level 1");
+    //     do
+    //     {
+    //         key = keypad.getKey();
+    //         if (key)
+    //         {
+    //             Serial.println("U guessed: ");
+    //             Serial.println(key);
+    //             response = key - '0';
+                
+    //             if (response == randNumber)
+    //             {
+    //                 getGuessLight();
+    //                 delay(2000);
+
+    //                 turnOffAll();
+
+    //                 Serial.println("Nice u guessed correct!");
+
+    //                 level++;
+    //             }
+    //             else
+    //             {
+    //                 Serial.println("U guessed wrong!");
+    //                 delay(500);
+    //                 wrongAnswer();
+    //                 delay(1000);
+    //                 turnOffAll();
+    //                 level = 1;
+    //                 difficulty = 1;
+    //             }
+                
+
+    //         }
+            
+    //     } while (difficulty == 1);
+    // }
+    
+        
+    // if (level == 2)
+    // {
+    //     Serial.println("Level UP");
+    // }
+
+    
 
 }
