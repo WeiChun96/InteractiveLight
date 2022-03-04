@@ -351,8 +351,8 @@ void getSequence()
 
 void loop()
 {
-    // turnOffAll();
-    // delay(2000);
+    turnOffAll();
+    delay(2000);
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
@@ -365,7 +365,6 @@ void loop()
     // }
     // srand(time(NULL));
     // randNumber = rand() % 9 + 1;
-
 
 
 
@@ -392,7 +391,6 @@ void loop()
                 Serial.println(i);
                 if (key)
                 {
-
                     response = key - '0';
                     if (response == difficulty[i])
                     {
@@ -402,7 +400,6 @@ void loop()
                             level++;
                             Serial.println("Level UP!");
                         }
-                        
                     }
                     else
                     {
@@ -416,35 +413,6 @@ void loop()
                     turnOffAll();
                 }
             }
-            
-            // if (key)
-            // {
-            //     Serial.print("U guessed: ");
-            //     Serial.println(key);
-            //     response = key - '0';
-                
-            //     if (response == difficulty[level - 1])
-            //     {
-            //         lightSequence(difficulty[level - 1]);
-            //         delay(2000);
-
-            //         turnOffAll();
-
-            //         Serial.println("Nice u guessed correct!");
-            //         Serial.println("Level UP!");
-
-            //         level++;
-            //     }
-            //     else
-            //     {
-            //         Serial.println("U guessed wrong!");
-            //         delay(500);
-            //         wrongAnswer();
-            //         delay(1000);
-            //         turnOffAll();
-            //         level = 1;
-            //     }
-            // }
             
         } while (level == 1);
     }
