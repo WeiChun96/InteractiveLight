@@ -351,13 +351,18 @@ void getSequence()
 
 void loop()
 {
-    turnOffAll();
-    delay(2000);
+    // turnOffAll();
+    // delay(2000);
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
     // FillLEDsFromPaletteColors( startIndex);
+    // key = keypad.getKey();
+
     // freePlayMode();
+    // if (key){
+    //     Serial.println(key);
+    // }
     // srand(time(NULL));
     // randNumber = rand() % 9 + 1;
 
@@ -368,48 +373,78 @@ void loop()
     {
         Serial.println("Starting Level 1");
         // randNumber = random(1, 9);
-        for (int i = 0; i < level; i++)
-        {
-            difficulty[i] = random(1, 9);
-            lightSequence(difficulty[i]);
-            Serial.println(difficulty[i]);
-        }
+        // for (int i = 0; i < level; i++)
+        // {
+        //     difficulty[i] = random(1, 9);
+        //     lightSequence(difficulty[i]);
+        //     Serial.println(difficulty[i]);
+        // }
+
+        getSequence();
         
         turnOffAll();
 
         do
         {
             key = keypad.getKey();
-            if (key)
+            for (int i = 0; i < level; i++)
             {
-                Serial.print("U guessed: ");
-                Serial.println(key);
-                response = key - '0';
-                
-                if (response == difficulty[level - 1])
+                Serial.println(i);
+                if (key)
                 {
-                    lightSequence(difficulty[level - 1]);
-                    delay(2000);
 
+                    response = key - '0';
+                    if (response == difficulty[i])
+                    {
+                        lightSequence(difficulty[i]);
+                        if (i == level)
+                        {
+                            level++;
+                            Serial.println("Level UP!");
+                        }
+                        
+                    }
+                    else
+                    {
+                        Serial.println("U guessed wrong!");
+                        delay(500);
+                        wrongAnswer();
+                        delay(1000);
+                        turnOffAll();
+                        level = 1;
+                    }
                     turnOffAll();
-
-                    Serial.println("Nice u guessed correct!");
-                    Serial.println("Level UP!");
-
-                    level++;
                 }
-                else
-                {
-                    Serial.println("U guessed wrong!");
-                    delay(500);
-                    wrongAnswer();
-                    delay(1000);
-                    turnOffAll();
-                    level = 1;
-                }
-                
-
             }
+            
+            // if (key)
+            // {
+            //     Serial.print("U guessed: ");
+            //     Serial.println(key);
+            //     response = key - '0';
+                
+            //     if (response == difficulty[level - 1])
+            //     {
+            //         lightSequence(difficulty[level - 1]);
+            //         delay(2000);
+
+            //         turnOffAll();
+
+            //         Serial.println("Nice u guessed correct!");
+            //         Serial.println("Level UP!");
+
+            //         level++;
+            //     }
+            //     else
+            //     {
+            //         Serial.println("U guessed wrong!");
+            //         delay(500);
+            //         wrongAnswer();
+            //         delay(1000);
+            //         turnOffAll();
+            //         level = 1;
+            //     }
+            // }
             
         } while (level == 1);
     }
