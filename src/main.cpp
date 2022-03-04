@@ -37,7 +37,7 @@ int randNumber;
 int response;
 int score = 0;
 int level = 1;
-int difficulty;
+int difficulty[9];
 
 // //Led light locations
 // // topLeft      topCenter       topRight
@@ -203,44 +203,53 @@ void freePlayMode()
     }
 }
 
-void getGuessLight()
+void lightSequence(int sequence)
 {
-    switch (randNumber)
+    switch (sequence)
     {
         case 1:      
             ledToLightUp(TopLeft, LightColors[6]);
+            delay(1000);
         break;
 
         case 2:      
             ledToLightUp(TopCenter, LightColors[6]);
+            delay(1000);
         break;
 
         case 3:      
             ledToLightUp(TopRight, LightColors[6]);
+            delay(1000);
         break;
 
         case 4:      
             ledToLightUp(CenterLeft, LightColors[6]);
+            delay(1000);
         break;
 
         case 5:      
             ledToLightUp(Center, LightColors[6]);
+            delay(1000);
         break;
 
         case 6:      
             ledToLightUp(CenterRight, LightColors[6]);
+            delay(1000);
         break;
 
         case 7:      
             ledToLightUp(BottomLeft, LightColors[6]);
+            delay(1000);
         break;
 
         case 8:      
             ledToLightUp(BottomCenter, LightColors[6]);
+            delay(1000);
         break;
 
         case 9:      
             ledToLightUp(BottomRight, LightColors[6]);
+            delay(1000);
         break;
     }
 }
@@ -323,10 +332,27 @@ void setup() {
     // keypad.addEventListener(keypadEvent);
 }
 
+void getSequence()
+{
+    for (int i = level - 1; i < level; i++)
+    {
+        difficulty[i] = random(1, 9);
+        Serial.println(difficulty[i]);
+    }
+
+    for (int i = 0; i < level; i++)
+    {
+        lightSequence(difficulty[i]);
+    }
+    
+    
+}
+
 
 void loop()
 {
     turnOffAll();
+    delay(2000);
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
@@ -338,58 +364,81 @@ void loop()
 
 
 
-    // if (level == 1)
-    // {
-    //     randNumber = random(1, 9);
-    //     response = key - '0';
-    //     Serial.print("The Random Number is: ");
-    //     Serial.println(randNumber);
-    //     getGuessLight();
-    //     delay(2000);
-    //     Serial.println("Starting Level 1");
-    //     do
-    //     {
-    //         key = keypad.getKey();
-    //         if (key)
-    //         {
-    //             Serial.println("U guessed: ");
-    //             Serial.println(key);
-    //             response = key - '0';
+    if (level == 1)
+    {
+        Serial.println("Starting Level 1");
+        // randNumber = random(1, 9);
+        for (int i = 0; i < level; i++)
+        {
+            difficulty[i] = random(1, 9);
+            lightSequence(difficulty[i]);
+            Serial.println(difficulty[i]);
+        }
+        
+        turnOffAll();
+
+        do
+        {
+            key = keypad.getKey();
+            if (key)
+            {
+                Serial.print("U guessed: ");
+                Serial.println(key);
+                response = key - '0';
                 
-    //             if (response == randNumber)
-    //             {
-    //                 getGuessLight();
-    //                 delay(2000);
+                if (response == difficulty[level - 1])
+                {
+                    lightSequence(difficulty[level - 1]);
+                    delay(2000);
 
-    //                 turnOffAll();
+                    turnOffAll();
 
-    //                 Serial.println("Nice u guessed correct!");
+                    Serial.println("Nice u guessed correct!");
+                    Serial.println("Level UP!");
 
-    //                 level++;
-    //             }
-    //             else
-    //             {
-    //                 Serial.println("U guessed wrong!");
-    //                 delay(500);
-    //                 wrongAnswer();
-    //                 delay(1000);
-    //                 turnOffAll();
-    //                 level = 1;
-    //                 difficulty = 1;
-    //             }
+                    level++;
+                }
+                else
+                {
+                    Serial.println("U guessed wrong!");
+                    delay(500);
+                    wrongAnswer();
+                    delay(1000);
+                    turnOffAll();
+                    level = 1;
+                }
                 
 
-    //         }
+            }
             
-    //     } while (difficulty == 1);
-    // }
+        } while (level == 1);
+    }
     
         
-    // if (level == 2)
-    // {
-    //     Serial.println("Level UP");
-    // }
+    if (level == 2)
+    {
+        Serial.println("Starting Level 2");
+        for (int i = 0; i < level; i++)
+        {
+            lightSequence(difficulty[i]);
+            difficulty[i] = random(1, 9);
+            Serial.println(difficulty[i]);
+        }
+        
+        
+        turnOffAll();
 
+        do
+        {
+            key = keypad.getKey();
+            for (int i = 0; i < level - 1; i++)
+            {
+                
+            }
+               
+        } while (level == 2);
+        
+
+    }
     
-
 }
