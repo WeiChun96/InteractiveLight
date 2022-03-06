@@ -387,24 +387,18 @@ void setup() {
 
     Serial.begin(115200);
     Serial.println("Starting");
-        // Initialize The LCD. Parameters: [ Columns, Rows ]
-    My_LCD.begin(16, 2);
-    // Clears The LCD Display
-    My_LCD.clear();
+    My_LCD.begin(16, 2); // Initialize The LCD. Parameters: [ Columns, Rows ]
+    My_LCD.clear(); // Clears The LCD Display
     pinMode(backLightpin, OUTPUT);
     analogWrite(backLightpin, 210);
     pinMode(contrast_pin, OUTPUT);
     analogWrite(contrast_pin, 40);
     My_LCD.print("Powering UP");
-
-
     delay( 3000 ); // power-up safety delay
-    
     // currentPalette = RainbowColors_p;
     FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness( BRIGHTNESS );
     My_LCD.clear();
-    // keypad.addEventListener(keypadEvent);
 }
 
 
