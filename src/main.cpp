@@ -36,7 +36,7 @@ int currentLightColorBottomRight = 0;
 int randNumber;
 int response;
 int level = 1;
-int difficulty[9];
+int difficulty[10];
 
 // //Led light locations
 // // topLeft      topCenter       topRight
@@ -291,10 +291,12 @@ void gameSettings()
 
 void getSequence()
 {
-    for (int i = level - 1; i < level; i++)
+    for (int i = (level - 1); i < level; i++)
     {
         difficulty[i] = random(1, 9);
-        Serial.print("The Answer is: ");
+        Serial.print("Random Number ");
+        Serial.print(i);
+        Serial.print(": ");
         Serial.println(difficulty[i]);
     }
 
@@ -329,29 +331,34 @@ void getGuessedInput()
 
 void startMemoryGame()
 {
-    Serial.println("Starting Level ");
+    Serial.print("Starting Level ");
     Serial.println(level);
+
     getSequence();
-    turnOffAll();
 
     key = keypad.getKey();
+
     for (int i = 0; i < level; i++)
     {
-        keypad.waitForKey();
         Serial.println("key in button");
-        Serial.print(key);
+        keypad.waitForKey();
+        
         if (key)
         {
+            Serial.print("Key pressed: ");
+            Serial.println(key);
             response = key - '0';
             if (response == difficulty[i])
             {
                 lightSequence(difficulty[i]);
+                delay(1000);
                 turnOffAll();
-                if (i == level)
+                
+                if (i == (level - 1))
                 {
                     level++;
                 }
-                else if (level == 9)
+                else if (level == 10)
                 {
                     Serial.println("Congratulation u Win");
                     Serial.println("Restarting Game");
@@ -394,6 +401,7 @@ void setup() {
     pinMode(contrast_pin, OUTPUT);
     analogWrite(contrast_pin, 40);
     My_LCD.print("Powering UP");
+    
     delay( 3000 ); // power-up safety delay
     // currentPalette = RainbowColors_p;
     FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
@@ -413,39 +421,7 @@ void loop()
     // key = keypad.getKey();
 
     // freePlayMode();
-    // if (key){
-    //     Serial.println(key);
-    // }
-    // srand(time(NULL));
-    // randNumber = rand() % 9 + 1;
-    switch (level)
-    {
-    case 1:
-        startMemoryGame();
-        break;
-    case 2:
-        startMemoryGame();
-        break;
-    case 3:
-        startMemoryGame();
-        break;
-    case 4:
-        startMemoryGame();
-        break;
-    case 5:
-        startMemoryGame();
-        break;
-    case 6:
-        startMemoryGame();
-        break;
-    case 7:
-        startMemoryGame();
-        break;
-    case 8:
-        startMemoryGame();
-        break;
-    case 9:
-        startMemoryGame();
-        break;
-    }
+
+    startMemoryGame();
+
 }
