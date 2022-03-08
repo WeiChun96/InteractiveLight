@@ -37,6 +37,7 @@ int randNumber;
 int response;
 int level = 1;
 int difficulty[10];
+bool proceedToNextLevel;
 
 // //Led light locations
 // // topLeft      topCenter       topRight
@@ -89,6 +90,7 @@ int LightColors[] = {
     CRGB::Black
 };
 
+/// <summary>Lightup the led for the location</summary>
 void ledToLightUp(int arr[], int color)
 {
     for (int i = 0; i < 6; i++)
@@ -109,91 +111,55 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
     }
 }
 
-// void keypadEvent(KeypadEvent key){
-//     switch (keypad.getState()){
-//     case PRESSED:
-//         if (key == '9') {
-//             ledToLightUp(BottomRight, LightColors[currentLightColor]);
-//             currentLightColor++;
-//             currentLightColor = currentLightColor % 8;
-//             Serial.println("Button 9");
-//         }
-//         break;
-
-//     case RELEASED:
-//         if (key == '8') {
-//             // digitalWrite(ledPin,ledPin_state);    // Restore LED state from before it started blinking.
-//             // blink = false;
-//             Serial.println("Button 8");
-//         }
-//         break;
-
-//     case HOLD:
-//         if (key == '9') {
-//             // blink = true;    // Blink the LED when holding the * key.
-//             Serial.println("Button 9 hold");
-//         }
-//         break;
-//     }
-// }
-
+/// <summary>Start a free game play that lights up the led by clicking on the buttons.</summary>
 void freePlayMode()
 {
     switch (key)
     {
     case '1':
-        /* code */
         ledToLightUp(TopLeft, LightColors[currentLightColorTopLeft]);
         currentLightColorTopLeft++;
         currentLightColorTopLeft = currentLightColorTopLeft % 8;
         break;
     case '2':
-        /* code */
         ledToLightUp(TopCenter, LightColors[currentLightColorTopCenter]);
         currentLightColorTopCenter++;
         currentLightColorTopCenter = currentLightColorTopCenter % 8;
         break;
     case '3':
-        /* code */
         ledToLightUp(TopRight, LightColors[currentLightColorTopRight]);
         currentLightColorTopRight++;
         currentLightColorTopRight = currentLightColorTopRight % 8;
         break;
     case '4':
-        /* code */
         ledToLightUp(CenterLeft, LightColors[currentLightColorCenterLeft]);
         currentLightColorCenterLeft++;
         currentLightColorCenterLeft = currentLightColorCenterLeft % 8;
         break;
     case '5':
-        /* code */
         ledToLightUp(Center, LightColors[currentLightColorCenter]);
         currentLightColorCenter++;
         currentLightColorCenter = currentLightColorCenter % 8;
         break;
     case '6':
-        /* code */
         ledToLightUp(CenterRight, LightColors[currentLightColorCenterRight]);
         currentLightColorCenterRight++;
         currentLightColorCenterRight = currentLightColorCenterRight % 8;
       
         break;
     case '7':
-        /* code */
         ledToLightUp(BottomLeft, LightColors[currentLightColorBottomLeft]);
         currentLightColorBottomLeft++;
         currentLightColorBottomLeft = currentLightColorBottomLeft % 8;
         
         break;
     case '8':
-        /* code */
         ledToLightUp(BottomCenter, LightColors[currentLightColorBottomCenter]);
         currentLightColorBottomCenter++;
         currentLightColorBottomCenter = currentLightColorBottomCenter % 8;
 
         break;
     case '9':
-        /* code */
         ledToLightUp(BottomRight, LightColors[currentLightColorBottomRight]);
         currentLightColorBottomRight++;
         currentLightColorBottomRight = currentLightColorBottomRight % 8;
@@ -202,6 +168,7 @@ void freePlayMode()
     }
 }
 
+/// <summary>Light up the leds that is randomize by the sequence</summary>
 void lightSequence(int sequence)
 {
     switch (sequence)
@@ -244,6 +211,7 @@ void lightSequence(int sequence)
     }
 }
 
+/// <summary>Red colour for wrong answer</summary>
 void wrongAnswer()
 {
     ledToLightUp(TopLeft, LightColors[3]);
@@ -257,6 +225,7 @@ void wrongAnswer()
     ledToLightUp(BottomRight, LightColors[3]);
 }
 
+/// <summary>Turn off all leds</summary>
 void turnOffAll()
 {
     ledToLightUp(TopLeft, LightColors[7]);
@@ -270,8 +239,7 @@ void turnOffAll()
     ledToLightUp(BottomRight, LightColors[7]);
 }
 
-
-
+/// <summary>Game Settings</summary>
 void gameSettings()
 {
     switch (key)
@@ -288,7 +256,7 @@ void gameSettings()
     }
 }
 
-
+/// <summary>Randomize the sequence for the memory game.</summary>
 void getSequence()
 {
     for (int i = (level - 1); i < level; i++)
@@ -299,49 +267,33 @@ void getSequence()
         Serial.print(": ");
         Serial.println(difficulty[i]);
     }
-
     for (int i = 0; i < level; i++)
     {
+        delay(1000);
         lightSequence(difficulty[i]);
+        delay(1000);
         turnOffAll();
     }
-    
-    
 }
 
-void getGuessedInput()
-{
-    key = keypad.getKey();
-    for (int i = 0; i < level; i++)
-    {
-        keypad.waitForKey();
-        Serial.print(key);
-        if (key)
-        {
-            response = key - '0';
-            if (response == difficulty[i])
-            {
-                lightSequence(difficulty[i]);
-            }
-            
-        }
-    }
-    
-}
-
+/// <summary>Starts the memory game</summary>
 void startMemoryGame()
 {
+    proceedToNextLevel = false;
     Serial.print("Starting Level ");
     Serial.println(level);
 
     getSequence();
 
-    key = keypad.getKey();
 
     for (int i = 0; i < level; i++)
     {
+        
+        Serial.print("For loop currently at : ");
+        Serial.println(i);
         Serial.println("key in button");
-        keypad.waitForKey();
+        key = keypad.waitForKey();
+        // key = keypad.getKey();
         
         if (key)
         {
@@ -351,22 +303,34 @@ void startMemoryGame()
             if (response == difficulty[i])
             {
                 lightSequence(difficulty[i]);
-                delay(1000);
+                delay(500);
                 turnOffAll();
+                Serial.print("Level currently at: ");
+                Serial.println(level - 1);
+                Serial.print("For loop currently at : ");
+                Serial.println(i);
                 
                 if (i == (level - 1))
                 {
-                    level++;
+                    Serial.println("Level UP!");
+                    proceedToNextLevel = true;
                 }
                 else if (level == 10)
                 {
                     Serial.println("Congratulation u Win");
                     Serial.println("Restarting Game");
                     level = 1;
+                    return;
                 }
                 
                 
             }
+            else if (key == 'A' || key == 'B' || key == 'C')
+            {
+                level = 1;
+                return;
+            }
+            
             else
             {
                 Serial.println("You Guessed Wrong");
@@ -374,12 +338,25 @@ void startMemoryGame()
                 wrongAnswer();
                 delay(2000);
                 turnOffAll();
-                level = 1;
+                proceedToNextLevel = false;
+                break;
             }
             
         }
         
     }
+
+    if (proceedToNextLevel)
+    {
+        
+        level++;
+    }
+    else
+    {
+        level = 1;
+    }
+    
+
 }
 
 // There are several different palettes of colors demonstrated here.
@@ -390,6 +367,8 @@ void startMemoryGame()
 // Additionally, you can manually define your own color palettes, or you can write
 // code that creates color palettes on the fly.  All are shown here.
 
+int contrast = 0;
+
 void setup() {
 
     Serial.begin(115200);
@@ -399,21 +378,24 @@ void setup() {
     pinMode(backLightpin, OUTPUT);
     analogWrite(backLightpin, 210);
     pinMode(contrast_pin, OUTPUT);
-    analogWrite(contrast_pin, 40);
+    analogWrite(contrast_pin, contrast);
     My_LCD.print("Powering UP");
+    My_LCD.setCursor(5, 1);
+    My_LCD.print("GG izi");
+    
     
     delay( 3000 ); // power-up safety delay
     // currentPalette = RainbowColors_p;
     FastLED.addLeds<LED_TYPE, LED_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness( BRIGHTNESS );
-    My_LCD.clear();
+    // My_LCD.clear();
 }
 
 
 void loop()
 {
-    turnOffAll();
-    delay(2000);
+    //turnOffAll();
+    //delay(2000);
     // currentPalette = RainbowColors_p;
     // static uint8_t startIndex = 0;
     // startIndex = startIndex + 1; /* motion speed */
@@ -422,6 +404,6 @@ void loop()
 
     // freePlayMode();
 
-    startMemoryGame();
+    //startMemoryGame();
 
 }
